@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -69,6 +71,16 @@ public class PeopleService {
             Person person = optionalPerson.get();
             Hibernate.initialize(person.getBooks());
             books = person.getBooks();
+
+            int daysToExpire = 10;
+            LocalDateTime expireDate = LocalDateTime.now(ZoneId.systemDefault()).minusDays(daysToExpire);
+
+            for (Book book : books) {
+                LocalDateTime takenAt = LocalDateTime.ofInstant(book.getTakenAt().toInstant(), ZoneId.systemDefault());
+                if (expireDate.isAfter(takenAt)) {
+                    book.setExpired(true);
+                }
+            }
         }
 
         return books;

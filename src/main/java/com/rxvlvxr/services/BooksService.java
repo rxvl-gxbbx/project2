@@ -103,6 +103,7 @@ public class BooksService {
 
             book.setPerson(null);
             book.setTakenAt(null);
+            book.setExpired(false);
             person.getBooks().remove(book);
         }
     }
