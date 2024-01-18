@@ -31,9 +31,9 @@ public class BookController {
 
     @GetMapping
     public String index(Model model,
-                        @RequestParam(name = "page", defaultValue = "0") int page,
+                        @RequestParam(name = "page", required = false) Optional<Integer> page,
                         @RequestParam(name = "books_per_page", required = false) Optional<Integer> booksPerPage,
-                        @RequestParam(name = "sort_by_year", required = false) boolean sortByYear) {
+                        @RequestParam(name = "sort_by_year", required = false, defaultValue = "true") boolean sortByYear) {
         model.addAttribute("books", booksService.findAll(page, booksPerPage, sortByYear));
 
         return "books/index";
@@ -45,8 +45,7 @@ public class BookController {
 
         bookValidator.validate(book, bindingResult);
 
-        if (bindingResult.hasErrors())
-            view = "books/new";
+        if (bindingResult.hasErrors()) view = "books/new";
         else {
             booksService.save(book);
             view = "redirect:/books";
@@ -70,7 +69,8 @@ public class BookController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("anotherPerson") Person anotherPerson) {
         booksService.findById(id).ifPresent(book -> model.addAttribute("book", book));
-        booksService.findPersonByBookId(id).ifPresentOrElse(person -> model.addAttribute("person", person),
+        booksService.findPersonByBookId(id).ifPresentOrElse(
+                person -> model.addAttribute("person", person),
                 () -> model.addAttribute("people", peopleService.findAll()));
 
         return "books/show";
@@ -83,9 +83,8 @@ public class BookController {
 
         bookValidator.validate(book, bindingResult);
 
-        if (bindingResult.hasErrors()) {
-            view = "books/edit";
-        } else {
+        if (bindingResult.hasErrors()) view = "books/edit";
+        else {
             booksService.update(id, book);
             view = "redirect:/books";
         }
@@ -118,10 +117,13 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam(name = "title", required = false) String title, Model model) {
-        if (title != null) {
-            model.addAttribute("books", booksService.findByTitleStartingWith(title));
-        }
+    public String searchPage() {
+        return "books/search";
+    }
+
+    @PostMapping("/search")
+    public String searchResults(@RequestParam(name = "title", required = false) String title, Model model) {
+        if (title != null) model.addAttribute("books", booksService.findByTitleStartingWith(title));
 
         return "books/search";
     }

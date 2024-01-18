@@ -10,20 +10,24 @@
 
 <div>
 
-    <div th:if="${people}" th:text="${'Эта книга свободна. Кому назначить ее?'}"></div>
-    <form th:action="@{/books/{id}/assign(id=${book.getId()})}" th:if="${people}" th:method="PATCH">
-        <label for="person">Выберите человека</label>
-        <select id="person" th:field="*{id}" th:object="${anotherPerson}">
-            <option th:each="person : ${people}" th:text="${person.getName()}"
-                    th:value="${person.getId()}"></option>
-        </select>
-        <input type="submit" value="Назначить книгу">
-    </form>
+    <div th:if="${people != null}">
+        <p th:text="${'Эта книга свободна. Кому назначить ее?'}">TEXT</p>
+        <form th:action="@{/books/{id}/assign(id=${book.getId()})}" th:method="PATCH">
+            <label for="person">Выберите человека</label>
+            <select id="person" th:field="*{id}" th:object="${anotherPerson}">
+                <option th:each="person : ${people}" th:text="${person.getName()}"
+                        th:value="${person.getId()}"></option>
+            </select>
+            <input type="submit" value="Назначить книгу">
+        </form>
+    </div>
 
-    <div th:if="${person}" th:text="${'Книга сейчас у: ' + person.getName()}"></div>
-    <form th:action="@{/books/{id}/release(id=${book.getId()})}" th:if="${person}" th:method="PATCH">
-        <input type="submit" value="Освободить книгу"/>
-    </form>
+    <div th:if="${person != null}">
+        <p th:text="${'Книга сейчас у: ' + person.getName()}">TEXT</p>
+        <form th:action="@{/books/{id}/release(id=${book.getId()})}" th:method="PATCH">
+            <input type="submit" value="Освободить книгу"/>
+        </form>
+    </div>
 </div>
 
 <hr>

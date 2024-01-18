@@ -14,17 +14,17 @@
 <body>
 
 <form th:action="@{/people}" th:method="POST" th:object="${person}">
-    <div>
+    <p>
         <label for="name">Введите ФИО: </label>
         <input id="name" th:field="*{name}" type="text"/>
-    </div>
-    <div class="error" th:errors="*{name}" th:if="${#fields.hasErrors('name')}">Name Error</div>
-    <div>
+    </p>
+    <p class="error" th:errors="*{name}" th:if="${#fields.hasErrors('name')}">Name Error</p>
+    <p>
         <label for="birthYear">Введите год рождения: </label>
         <input id="birthYear" th:field="*{birthYear}" type="text"/>
-    </div>
-    <div class="error" th:errors="*{birthYear}" th:if="${#fields.hasErrors('birthYear')}">Birth Error</div>
-    <input type="submit" value="Создать"/>
+    </p>
+    <p class="error" th:errors="*{birthYear}" th:if="${#fields.hasErrors('birthYear')}">Birth Error</p>
+    <button type="submit">Создать</button>
 </form>
 
 </body>

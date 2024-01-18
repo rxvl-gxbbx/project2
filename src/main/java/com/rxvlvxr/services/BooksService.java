@@ -30,11 +30,12 @@ public class BooksService {
     }
 
 
-    public List<Book> findAll(int page, Optional<Integer> booksPerPage, boolean sortByYear) {
+    public List<Book> findAll(Optional<Integer> page, Optional<Integer> booksPerPage, boolean sortByYear) {
         Sort sortCriteria = sortByYear ? Sort.by("year") : Sort.unsorted();
         int itemsPerPage = booksPerPage.orElse(Integer.MAX_VALUE);
+        int pageCount = page.orElse(0);
 
-        return booksRepository.findAll(PageRequest.of(page, itemsPerPage, sortCriteria)).getContent();
+        return booksRepository.findAll(PageRequest.of(pageCount, itemsPerPage, sortCriteria)).getContent();
     }
 
     public Optional<Book> findById(int id) {
@@ -51,16 +52,16 @@ public class BooksService {
         updatedBook.setId(id);
         Optional<Book> optionalBook = booksRepository.findById(id);
 
-        if (optionalBook.isPresent()) {
-            Book book = optionalBook.get();
+        optionalBook.ifPresent(book -> {
             Person person = book.getPerson();
 
             if (person != null) {
                 book.setPerson(null);
                 person.getBooks().remove(book);
                 updatedBook.setPerson(person);
+                updatedBook.setTakenAt(book.getTakenAt());
             }
-        }
+        });
 
         booksRepository.save(updatedBook);
     }
@@ -71,16 +72,15 @@ public class BooksService {
     }
 
     public Optional<Person> findPersonByBookId(int id) {
-        Person person = null;
+        final Person[] person = {null};
         Optional<Book> optionalBook = booksRepository.findById(id);
 
-        if (optionalBook.isPresent()) {
-            Book book = optionalBook.get();
+        optionalBook.ifPresent(book -> {
             Hibernate.initialize(book.getPerson());
-            person = book.getPerson();
-        }
+            person[0] = book.getPerson();
+        });
 
-        return Optional.ofNullable(person);
+        return Optional.ofNullable(person[0]);
     }
 
     @Transactional
@@ -97,20 +97,19 @@ public class BooksService {
     public void release(int id) {
         Optional<Book> optionalBook = booksRepository.findById(id);
 
-        if (optionalBook.isPresent()) {
-            Book book = optionalBook.get();
-            Person person = optionalBook.get().getPerson();
+        optionalBook.ifPresent(book -> {
+            Person person = book.getPerson();
 
             book.setPerson(null);
             book.setTakenAt(null);
             book.setExpired(false);
             person.getBooks().remove(book);
-        }
+        });
     }
 
     public List<Book> findByTitleStartingWith(String title) {
         List<Book> books = title.isEmpty() ? new ArrayList<>() : booksRepository.findByTitleStartingWith(StringUtils.capitalize(title.toLowerCase()));
-        for (Book book : books) Hibernate.initialize(book.getPerson());
+        books.stream().map(Book::getPerson).forEach(Hibernate::initialize);
 
         return books;
     }

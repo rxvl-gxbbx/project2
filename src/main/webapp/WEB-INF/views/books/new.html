@@ -14,22 +14,23 @@
 <body>
 
 <form th:action="@{/books}" th:method="POST" th:object="${book}">
-    <div>
+    <p>
         <label for="title">Введите название книги: </label>
         <input id="title" th:field="*{title}" type="text"/>
-    </div>
-    <div class="error" th:errors="*{title}" th:if="${#fields.hasErrors('title')}">Title error</div>
-    <div>
+    </p>
+    <p class="error" th:errors="*{title}" th:if="${#fields.hasErrors('title')}">Title error</p>
+    <p>
         <label for="author">Введите автора: </label>
         <input id="author" th:field="*{author}" type="text"/>
-    </div>
-    <div class="error" th:errors="*{author}" th:if="${#fields.hasErrors('author')}">Author error</div>
-    <div>
+    </p>
+    <p class="error" th:errors="*{author}" th:if="${#fields.hasErrors('author')}">Author error</p>
+    <p>
         <label for="year">Введите год: </label>
         <input id="year" th:field="*{year}" type="text"/>
-    </div>
-    <div class="error" th:errors="*{year}" th:if="${#fields.hasErrors('year')}">Year error</div>
-    <input type="submit" value="Создать">
+    </p>
+    <p class="error" th:errors="*{year}" th:if="${#fields.hasErrors('year')}">Year error</p>
+    <button type="submit">Создать</button>
 </form>
+
 </body>
 </html>

@@ -13,6 +13,7 @@ import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Transactional(readOnly = true)
@@ -43,17 +44,14 @@ public class PeopleService {
 
         Optional<Person> optionalPerson = peopleRepository.findById(id);
 
-        if (optionalPerson.isPresent()) {
-            Person person = optionalPerson.get();
+        optionalPerson.ifPresent(person -> {
             List<Book> books = person.getBooks();
 
             updatedPerson.setBooks(books);
             person.getBooks().clear();
 
-            for (Book book : books) {
-                book.setPerson(updatedPerson);
-            }
-        }
+            books.forEach(book -> book.setPerson(updatedPerson));
+        });
 
         peopleRepository.save(updatedPerson);
     }
@@ -65,25 +63,24 @@ public class PeopleService {
 
     public List<Book> findAllBooksByPersonId(int id) {
         Optional<Person> optionalPerson = peopleRepository.findById(id);
-        List<Book> books = Collections.emptyList();
+        AtomicReference<List<Book>> books = new AtomicReference<>(Collections.emptyList());
 
-        if (optionalPerson.isPresent()) {
-            Person person = optionalPerson.get();
+        optionalPerson.ifPresent(person -> {
             Hibernate.initialize(person.getBooks());
-            books = person.getBooks();
+            books.set(person.getBooks());
 
             int daysToExpire = 10;
             LocalDateTime expireDate = LocalDateTime.now(ZoneId.systemDefault()).minusDays(daysToExpire);
 
-            for (Book book : books) {
+            books.get().forEach(book -> {
                 LocalDateTime takenAt = LocalDateTime.ofInstant(book.getTakenAt().toInstant(), ZoneId.systemDefault());
                 if (expireDate.isAfter(takenAt)) {
                     book.setExpired(true);
                 }
-            }
-        }
+            });
+        });
 
-        return books;
+        return books.get();
     }
 
     public Optional<Person> findPersonByName(String name) {

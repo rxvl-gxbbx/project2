@@ -9,19 +9,18 @@
 <p th:text="${person.getName() + ', ' + person.getBirthYear()}">VALUE</p>
 
 <div th:if="${books.isEmpty()}">
-    Человек пока не взял ни одной книги
+    <p>Человек пока не взял ни одной книги</p>
 </div>
 
 <div th:if="${!books.isEmpty()}">
     <hr>
-    <b>Книги: </b>
-    <div th:each="book : ${books}" th:style="${book.isExpired()}? 'color: red;'"
-         th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}">
+    <p><b>Книги: </b></p>
+    <p th:each="book : ${books}" th:style="${book.isExpired()}? 'color: red;'"
+       th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}">
         Book
-    </div>
+    </p>
 </div>
 
-<br>
 <hr>
 
 <form th:action="@{/people/{id}/edit(id=${person.getId()})}" th:method="GET">

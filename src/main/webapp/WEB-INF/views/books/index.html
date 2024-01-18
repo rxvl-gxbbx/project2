@@ -6,17 +6,15 @@
 </head>
 <body>
 
-<div th:each="book: ${books}">
+<p th:each="book: ${books}">
     <a th:href="@{books/{id}(id=${book.getId()})}"
        th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}"/>
-</div>
+</p>
 
-<br>
 <hr>
 
-<a href="books/new">Добавить книгу</a>
+<p><a href="books/new">Добавить книгу</a></p>
 
-<br>
 <hr>
 
 <form th:action="@{/books}" th:method="GET">
@@ -31,12 +29,10 @@
         <option value="">All</option>
     </select>
 
-    <br>
-
     <label for="sort_by_year">Сортировка</label>
     <select id="sort_by_year" th:name="sort_by_year">
-        <option th:value="${false}">По умолчанию</option>
-        <option th:value="${true}">По дате</option>
+        <option th:value="${true}">По году издания</option>
+        <option th:value="${false}">По дате изменения</option>
     </select>
 
     <button type="submit">Применить</button>
