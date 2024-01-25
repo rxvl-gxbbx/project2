@@ -36,15 +36,19 @@ public class PeopleController {
     @PostMapping()
     public String create(@ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult) {
+        String view;
+
         personValidator.validate(person, bindingResult);
         personYearValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors())
-            return "people/new";
+            view = "people/new";
+        else {
+            peopleService.save(person);
+            view = "redirect:/people";
+        }
 
-        peopleService.save(person);
-
-        return "redirect:/people";
+        return view;
     }
 
     @GetMapping("/new")
@@ -70,14 +74,17 @@ public class PeopleController {
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
                          @PathVariable("id") int id) {
+        String view;
+
         personYearValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors())
-            return "people/edit";
-
-        peopleService.update(id, person);
-
-        return "redirect:/people";
+            view = "people/edit";
+        else {
+            peopleService.update(id, person);
+            view = "redirect:/people";
+        }
+        return view;
     }
 
     @DeleteMapping("/{id}")

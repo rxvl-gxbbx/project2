@@ -18,14 +18,14 @@
                 <option th:each="person : ${people}" th:text="${person.getName()}"
                         th:value="${person.getId()}"></option>
             </select>
-            <input type="submit" value="Назначить книгу">
+            <button type="submit">Назначить книгу</button>
         </form>
     </div>
 
     <div th:if="${person != null}">
         <p th:text="${'Книга сейчас у: ' + person.getName()}">TEXT</p>
         <form th:action="@{/books/{id}/release(id=${book.getId()})}" th:method="PATCH">
-            <input type="submit" value="Освободить книгу"/>
+            <button type="submit">Освободить книгу</button>
         </form>
     </div>
 </div>
@@ -33,11 +33,11 @@
 <hr>
 
 <form th:action="@{/books/{id}/edit(id=${book.getId()})}" th:method="GET">
-    <input type="submit" value="Редактировать">
+    <button type="submit">Редактировать</button>
 </form>
 
 <form th:action="@{/books/{id}(id=${book.getId()})}" th:method="DELETE">
-    <input type="submit" value="Удалить"/>
+    <button type="submit">Удалить</button>
 </form>
 
 </body>

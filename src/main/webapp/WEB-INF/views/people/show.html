@@ -24,11 +24,11 @@
 <hr>
 
 <form th:action="@{/people/{id}/edit(id=${person.getId()})}" th:method="GET">
-    <input type="submit" value="Редактировать">
+    <button type="submit">Редактировать</button>
 </form>
 
 <form th:action="@{/people/{id}(id=${person.getId()})}" th:method="DELETE">
-    <input type="submit" value="Удалить"/>
+    <button type="submit">Удалить</button>
 </form>
 
 </body>
