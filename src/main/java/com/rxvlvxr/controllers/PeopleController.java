@@ -2,7 +2,7 @@ package com.rxvlvxr.controllers;
 
 import com.rxvlvxr.models.Person;
 import com.rxvlvxr.services.PeopleService;
-import com.rxvlvxr.util.PersonValidator;
+import com.rxvlvxr.util.PersonNameValidator;
 import com.rxvlvxr.util.PersonYearValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/people")
 public class PeopleController {
     private final PeopleService peopleService;
-    private final PersonValidator personValidator;
+    private final PersonNameValidator personNameValidator;
     private final PersonYearValidator personYearValidator;
 
     @Autowired
-    public PeopleController(PeopleService peopleService, PersonValidator personValidator, PersonYearValidator personYearValidator) {
+    public PeopleController(PeopleService peopleService, PersonNameValidator personNameValidator, PersonYearValidator personYearValidator) {
         this.peopleService = peopleService;
-        this.personValidator = personValidator;
+        this.personNameValidator = personNameValidator;
         this.personYearValidator = personYearValidator;
     }
 
@@ -38,7 +38,7 @@ public class PeopleController {
                          BindingResult bindingResult) {
         String view;
 
-        personValidator.validate(person, bindingResult);
+        personNameValidator.validate(person, bindingResult);
         personYearValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors())

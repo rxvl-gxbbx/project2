@@ -70,10 +70,14 @@ public class PeopleService {
             books.set(person.getBooks());
 
             int daysToExpire = 10;
+            // задаем дату просрочки для держателя книги
             LocalDateTime expireDate = LocalDateTime.now(ZoneId.systemDefault()).minusDays(daysToExpire);
 
+            // проходимся по всему списку и проверяем просрочил ли дату сдачи держатель или нет
             books.get().forEach(book -> {
                 LocalDateTime takenAt = LocalDateTime.ofInstant(book.getTakenAt().toInstant(), ZoneId.systemDefault());
+                // если дата когда книга должна была быть возвращена в библиотеку идет после даты когда ее взяли
+                // то параметру expired присвивается значение true
                 if (expireDate.isAfter(takenAt)) {
                     book.setExpired(true);
                 }

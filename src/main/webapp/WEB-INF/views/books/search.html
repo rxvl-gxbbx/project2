@@ -16,7 +16,7 @@
     <button type="submit">Искать</button>
 </form>
 
-
+<!-- если в контроллере передали аттрибут books, то данный блок будет отображаться -->
 <div th:if="${books != null}">
     <p th:if="${books.isEmpty()}" th:text="${'Книг не найдено'}">NOT FOUND</p>
     <div th:each="book : ${books}" th:if="${!books.isEmpty()}">

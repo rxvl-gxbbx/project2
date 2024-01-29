@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PeopleRepository extends JpaRepository<Person, Integer> {
+    // ищем строку по параметру name
     Person findPersonByName(String name);
 }

@@ -8,13 +8,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+// валидация на уникальность по имени человека
 @Component
-public class PersonValidator implements Validator {
+public class PersonNameValidator implements Validator {
 
     private final PeopleService peopleService;
 
     @Autowired
-    public PersonValidator(PeopleService peopleService) {
+    public PersonNameValidator(PeopleService peopleService) {
         this.peopleService = peopleService;
     }
 

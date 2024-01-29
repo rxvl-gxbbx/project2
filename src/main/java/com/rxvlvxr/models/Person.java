@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
+// этот класс соответствует сущности person
 @Entity
 @Table(name = "person")
 public class Person {
@@ -23,6 +24,7 @@ public class Person {
     @Min(value = 1886, message = "Год рождения должен быть выше 1885")
     @Column(name = "birth_year")
     private int birthYear;
+    // указываем на связь между сущностями
     @OneToMany(mappedBy = "person")
     private List<Book> books;
 

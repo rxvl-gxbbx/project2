@@ -27,6 +27,7 @@ import java.util.Properties;
 
 @Configuration
 @ComponentScan("com.rxvlvxr")
+// указываем путь к Hibernate properties для объекта Environment
 @PropertySource("classpath:hibernate.properties")
 @EnableJpaRepositories("com.rxvlvxr.repositories")
 @EnableTransactionManagement
@@ -36,6 +37,7 @@ public class SpringConfig implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
     private final Environment environment;
 
+    // внедряем зависимости
     @Autowired
     public SpringConfig(ApplicationContext applicationContext, Environment environment) {
         this.applicationContext = applicationContext;
@@ -46,6 +48,7 @@ public class SpringConfig implements WebMvcConfigurer {
     public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
+        // указываем путь к шаблонам
         templateResolver.setPrefix("/WEB-INF/views/");
         templateResolver.setSuffix(".html");
         templateResolver.setCharacterEncoding("UTF-8");
@@ -60,6 +63,7 @@ public class SpringConfig implements WebMvcConfigurer {
         return templateEngine;
     }
 
+    // настраиваем шаблонизатор, внедряем Thymeleaf 6
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
@@ -70,6 +74,7 @@ public class SpringConfig implements WebMvcConfigurer {
     }
 
 
+    // указываем данные для подключения к базе данных PostgreSQL
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -82,6 +87,7 @@ public class SpringConfig implements WebMvcConfigurer {
         return dataSource;
     }
 
+    // добавляем properties для Hibernate
     private Properties hibernateProperties() {
         Properties properties = new Properties();
         properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));

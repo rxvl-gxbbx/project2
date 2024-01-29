@@ -7,6 +7,7 @@ import org.springframework.validation.Validator;
 
 import java.time.Year;
 
+// валидация максимально допустимого значения года для издания книги
 @Component
 public class BookValidator implements Validator {
 

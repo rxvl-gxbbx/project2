@@ -16,11 +16,13 @@ public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationC
         return null;
     }
 
+    // указываем класс конфигурации
     @Override
     protected Class<?>[] getServletConfigClasses() {
         return new Class[]{SpringConfig.class};
     }
 
+    // отправляем все запросы от пользователя на dispatcher servlet
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
@@ -33,11 +35,16 @@ public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationC
         registerHiddenFieldFilter(aServletContext);
     }
 
+    /*
+    устанавливаем фильтр, который будет ловить скрытое поле _method для нестандартных для HTML 5 запросов
+    например: PATCH, DELETE, PUT
+    */
     private void registerHiddenFieldFilter(ServletContext aContext) {
         aContext.addFilter("hiddenHttpMethodFilter",
                 new HiddenHttpMethodFilter()).addMappingForUrlPatterns(null, true, "/*");
     }
 
+    // настройки кодировки
     private void registerCharacterEncodingFilter(ServletContext aContext) {
         EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
 

@@ -15,6 +15,7 @@
 <div th:if="${!books.isEmpty()}">
     <hr>
     <p><b>Книги: </b></p>
+    <!-- если у объекта из модели books поле expired == true, то данная строка окрасится в красный цвет -->
     <p th:each="book : ${books}" th:style="${book.isExpired()}? 'color: red;'"
        th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}">
         Book

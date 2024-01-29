@@ -9,6 +9,7 @@ import org.springframework.validation.Validator;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+// валидация по возрасту человека
 @Component
 public class PersonYearValidator implements Validator {
 
